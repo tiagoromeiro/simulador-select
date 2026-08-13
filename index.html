@@ -146,13 +146,95 @@ select:focus,.inp:focus,.inp-txt:focus{border-color:var(--gn);background:#fff}
 .bd:hover{color:var(--red);background:#FDF0F0}
 footer{text-align:center;font-size:12px;color:var(--g400);padding:14px 24px;border-top:1px solid var(--g200);background:#fff}
 @media print{
-  body{background:#fff}
-  header{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:var(--gn)!important}
-  .ntabs,.br,.bd,.fb{display:none!important}
-  .pg{display:block!important}
-  #pr{display:block!important}
-  #ps{display:none!important}
-  .res,.t-tri,.t-men,.t-fed,.t-mun,.t-est{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  body{background:#fff!important;margin:0;padding:0}
+  header{background:var(--gn)!important;border-bottom:3px solid var(--or)!important}
+  .ntabs,.br,.bd,.fb,.tog-row,.obs,.card:last-of-type{display:none!important}
+  .pg{display:none!important}
+  #ps{display:block!important}
+  #pr{display:none!important}
+  main{padding:10px!important}
+  .card{break-inside:avoid;page-break-inside:avoid;margin-bottom:10px!important}
+  .res{break-inside:avoid}
+  .cg,.res-g{grid-template-columns:1fr 1fr!important}
+  .g2,.g3{grid-template-columns:1fr 1fr!important}
+  /* Restaurar colunas da tabela no print */
+  .itbl th:nth-child(4),.itbl td:nth-child(4){display:table-cell!important}
+  .itbl th:nth-child(5),.itbl td:nth-child(5){display:table-cell!important}
+}
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+  /* Header */
+  .hi{padding:10px 16px;gap:8px}
+  .logo-img{height:38px}
+  .nt{padding:7px 12px;font-size:12px}
+
+  /* Main */
+  main{padding:12px 12px 60px}
+
+  /* Cards */
+  .card{padding:14px}
+
+  /* Grids — tudo em coluna unica no mobile */
+  .g2,.g3,.g4{grid-template-columns:1fr!important;gap:10px}
+
+  /* Campos */
+  .field select,.pfx,.inp-txt{height:44px;font-size:15px}
+  .pfx input{font-size:15px}
+  .lbl{font-size:11px}
+
+  /* Toggle comissao */
+  .com-wrap{flex-wrap:wrap;gap:6px}
+  .com-wrap .pfx{flex:1 1 100px}
+  .tog-row{flex-wrap:wrap}
+  .tog{height:38px;font-size:12px;padding:0 12px}
+
+  /* Resultado */
+  .res{padding:16px}
+  .res-val{font-size:28px}
+  .res-g{grid-template-columns:1fr!important;gap:8px}
+  .ri{padding:8px 12px}
+  .ri .rv{font-size:13px}
+
+  /* Cenarios */
+  .cg{grid-template-columns:1fr!important;gap:8px}
+  .cc{padding:12px 14px}
+  .cc .cv{font-size:16px}
+
+  /* TABELA IMPOSTOS — principal problema no mobile */
+  .itbl{font-size:11px}
+  .itbl th{font-size:9px;padding:5px 6px}
+  .itbl td{padding:7px 6px;font-size:11px}
+  /* Esconder coluna Base no mobile (informacao menos critica) */
+  .itbl th:nth-child(4),.itbl td:nth-child(4){display:none}
+  /* Esconder coluna Aliquota no mobile */
+  .itbl th:nth-child(5),.itbl td:nth-child(5){display:none}
+
+  /* Tags menores */
+  .tag{font-size:9px;padding:1px 4px}
+
+  /* Obs */
+  .obs{font-size:11px}
+
+  /* Botoes */
+  .br{gap:8px;padding:6px 0 16px}
+  .btn{padding:10px 14px;font-size:12px}
+
+  /* Relatório */
+  .rkg{grid-template-columns:1fr 1fr!important}
+  .rk .v{font-size:16px}
+  .si{flex-direction:column}
+  .siv{gap:12px}
+  .pt{font-size:11px}
+  .pt th{font-size:9px;padding:5px 6px}
+  .pt td{padding:7px 6px}
+}
+
+@media(max-width:380px){
+  .res-val{font-size:24px}
+  .nt{padding:6px 10px;font-size:11px}
+  .rkg{grid-template-columns:1fr!important}
 }
 </style>
 </head>
