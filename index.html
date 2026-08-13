@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -45,7 +45,7 @@ main{max-width:920px;margin:0 auto;padding:24px 24px 60px}
 select,.inp,.inp-txt{
   width:100%;height:40px;padding:0 12px;
   border:1px solid var(--g200);border-radius:8px;
-  font-size:14px;color:var(--g900);background:var(--g50);
+  font-size:16px;color:var(--g900);background:var(--g50);
   outline:none;-webkit-appearance:none;appearance:none;
 }
 select{
@@ -58,7 +58,7 @@ select:focus,.inp:focus,.inp-txt:focus{border-color:var(--gn);background:#fff}
 .pfx{display:flex;align-items:center;height:40px;border:1px solid var(--g200);border-radius:8px;background:var(--g50);overflow:hidden}
 .pfx:focus-within{border-color:var(--gn);background:#fff}
 .pfx .pre{padding:0 6px 0 12px;font-size:14px;color:var(--g400);white-space:nowrap;flex-shrink:0}
-.pfx input{border:none;background:transparent;padding:0 12px 0 2px;flex:1;font-size:14px;outline:none;color:var(--g900);height:100%;min-width:0}
+.pfx input{border:none;background:transparent;padding:0 12px 0 2px;flex:1;font-size:16px;outline:none;color:var(--g900);height:100%;min-width:0}
 /* comissao inline */
 .com-wrap{display:flex;align-items:center;gap:6px}
 .com-wrap .pfx{flex:0 0 100px}
@@ -146,21 +146,32 @@ select:focus,.inp:focus,.inp-txt:focus{border-color:var(--gn);background:#fff}
 .bd:hover{color:var(--red);background:#FDF0F0}
 footer{text-align:center;font-size:12px;color:var(--g400);padding:14px 24px;border-top:1px solid var(--g200);background:#fff}
 @media print{
-  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
-  body{background:#fff!important;margin:0;padding:0}
-  header{background:var(--gn)!important;border-bottom:3px solid var(--or)!important}
-  .ntabs,.br,.bd,.fb,.tog-row,.obs,.card:last-of-type{display:none!important}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;box-sizing:border-box}
+  html,body{width:100%;margin:0;padding:0;background:#fff!important;font-size:11px}
+  header{background:var(--gn)!important;border-bottom:3px solid var(--or)!important;padding:8px 16px}
+  .logo-img{height:30px}
+  .ntabs,.br,.bd,.fb,.tog-row,.tog-row,.row-credito,.row-difal{display:none!important}
   .pg{display:none!important}
   #ps{display:block!important}
   #pr{display:none!important}
-  main{padding:10px!important}
-  .card{break-inside:avoid;page-break-inside:avoid;margin-bottom:10px!important}
-  .res{break-inside:avoid}
-  .cg,.res-g{grid-template-columns:1fr 1fr!important}
+  main{padding:8px 12px!important;max-width:100%!important}
+  .card{border:1px solid #ddd;border-radius:6px;padding:10px 12px;margin-bottom:8px;break-inside:avoid}
+  .res{padding:12px;border-radius:6px;margin-bottom:8px}
+  .res-val{font-size:22px!important}
+  .ri .rv{font-size:12px!important}
+  .cg{grid-template-columns:1fr 1fr!important}
+  .res-g{grid-template-columns:1fr 1fr!important}
   .g2,.g3{grid-template-columns:1fr 1fr!important}
-  /* Restaurar colunas da tabela no print */
-  .itbl th:nth-child(4),.itbl td:nth-child(4){display:table-cell!important}
-  .itbl th:nth-child(5),.itbl td:nth-child(5){display:table-cell!important}
+  .itbl-wrap{overflow:visible!important}
+  .itbl{min-width:unset!important;width:100%;font-size:10px}
+  .itbl th,.itbl td{padding:4px 6px!important;font-size:10px}
+  .cc{padding:8px 10px}
+  .cc .cv{font-size:13px}
+  .obs{font-size:10px;padding:6px 8px;margin-top:8px}
+  .ct{font-size:10px;margin-bottom:8px}
+  footer{padding:6px;font-size:10px;border-top:1px solid #ddd}
+  /* Forcar tudo em 1 pagina */
+  #ps{page-break-inside:avoid}
 }
 
 /* ===== MOBILE ===== */
@@ -180,8 +191,9 @@ footer{text-align:center;font-size:12px;color:var(--g400);padding:14px 24px;bord
   .g2,.g3,.g4{grid-template-columns:1fr!important;gap:10px}
 
   /* Campos */
-  .field select,.pfx,.inp-txt{height:44px;font-size:15px}
-  .pfx input{font-size:15px}
+  .field select,.pfx,.inp-txt{height:44px;font-size:16px}
+  .pfx input{font-size:16px!important}
+  .field select{font-size:16px}
   .lbl{font-size:11px}
 
   /* Toggle comissao */
@@ -278,18 +290,6 @@ footer{text-align:center;font-size:12px;color:var(--g400);padding:14px 24px;bord
       </div>
     </div>
 
-    <!-- DIFAL — somente venda interestadual -->
-    <div class="g3 mt" id="row-difal" style="display:none">
-      <div class="field">
-        <span class="lbl">Destinatário contribuinte de ICMS?</span>
-        <div class="tog-row" style="margin-top:0">
-          <button class="tog" id="difal-sim" onclick="setDifal('sim')">Sim — sem DIFAL</button>
-          <button class="tog a" id="difal-nao" onclick="setDifal('nao')">Não — com DIFAL</button>
-        </div>
-        <div style="font-size:11px;color:var(--g400);margin-top:5px">Contribuinte = empresa. Não contribuinte = pessoa física ou produtor rural.</div>
-      </div>
-    </div>
-
     <!-- LINHA 2: lucro (somente vendas), comissao, descricao -->
     <div class="g3 mt">
       <div class="field" id="row-lucro">
@@ -332,10 +332,12 @@ footer{text-align:center;font-size:12px;color:var(--g400);padding:14px 24px;bord
   <!-- IMPOSTOS -->
   <div class="card">
     <div class="ct">Detalhamento de impostos</div>
+    <div class="itbl-wrap">
     <table class="itbl">
       <thead><tr><th>Tributo</th><th>Esfera</th><th>Periodicidade</th><th>Base</th><th>Alíquota</th><th>Valor</th></tr></thead>
       <tbody id="imp-b"></tbody>
     </table>
+    </div>
     <div class="obs"><b>Observação</b><span id="obs-t"></span></div>
   </div>
 
@@ -383,7 +385,6 @@ footer{text-align:center;font-size:12px;color:var(--g400);padding:14px 24px;bord
 
 <script>
 var comBase = "bruto";
-var difalAtivo = true; // nao contribuinte por padrao
 var cur = null;
 var KEY = "sel_v6";
 var MESES = ["Janeiro","Fevereiro","Marco","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
@@ -433,13 +434,6 @@ function parseI(id) {
   return parseFloat($el(id).value.replace(/\./g,"").replace(",",".")) || 0;
 }
 
-function setDifal(v) {
-  difalAtivo = (v === "nao");
-  $el("difal-sim").className = "tog" + (v === "sim" ? " a" : "");
-  $el("difal-nao").className = "tog" + (v === "nao" ? " a" : "");
-  calc();
-}
-
 function onTipo() {
   var tipo = $el("tipo").value;
   var isE = (tipo==="cv" || tipo==="mn");
@@ -450,7 +444,6 @@ function onTipo() {
   if (tipo==="ns") { $show("row-credito"); $el("credito-pct").value="7"; }
   else if (tipo==="nv") { $show("row-credito"); $el("credito-pct").value="7"; }
   else $hide("row-credito");
-  if (tipo==="ui") $show("row-difal"); else $hide("row-difal");
   if (isE) $hide("card-cen"); else $show("card-cen");
   $tx("res-tit", isE ? "Valor Recebido" : "Preco de Venda");
   calc();
@@ -468,7 +461,7 @@ function getTR(tipo) {
   if (tipo==="mn") return 0.05 + 0.0065 + 0.03 + 0.32*0.15 + 0.32*0.09;
   // Vendas: PIS/COFINS monofasico (Lei 10.485/2002) - aliquota ZERO no revendedor
   if (tipo==="up") return 0.08*0.15 + 0.12*0.09 + 0.05*0.12;
-  if (tipo==="ui") return 0.08*0.15 + 0.12*0.09 + 0.05*0.12 + (difalAtivo ? 0.05*0.05 : 0);
+  if (tipo==="ui") return 0.08*0.15 + 0.12*0.09 + 0.05*0.12 + 0.05*0.05;
   if (tipo==="ns") return 0.08*0.15 + 0.12*0.09 + 0.07;
   if (tipo==="nv") return 0.08*0.15 + 0.12*0.09 + 0.07;
   return 0;
@@ -513,9 +506,9 @@ function getLinhas(tipo, preco) {
       {n:"IRPJ",  e:"f",b:R(preco*0.08)+" (8%)",  a:"15,00%",v:preco*0.08*0.15, t:true},
       {n:"CSLL",  e:"f",b:R(preco*0.12)+" (12%)", a:"9,00%", v:preco*0.12*0.09, t:true},
       {n:"ICMS",  e:"e",b:R(b5)+" (5% RICMS/PR)", a:"12,00%",v:b5*0.12,         t:false},
-      ...(difalAtivo ? [{n:"DIFAL", e:"e",b:R(b5)+" (5%)", a:"5,00%", v:b5*0.05, t:false}] : [])
+      {n:"DIFAL", e:"e",b:R(b5)+" (5%)", a:"5,00%", v:b5*0.05, t:false}
     ],
-    obs:"PIS/COFINS: aliquota zero (monofasico Lei 10.485/2002). ICMS base 5% RICMS/PR. " + (difalAtivo ? "DIFAL ao estado de destino (destinatario nao contribuinte). GNRE antes da saida. " : "Sem DIFAL (destinatario contribuinte de ICMS). ") + "IRPJ/CSLL trimestrais."
+    obs:"PIS/COFINS: aliquota zero (monofasico Lei 10.485/2002). ICMS base 5% RICMS/PR. DIFAL ao estado de destino. GNRE antes da saida. IRPJ/CSLL trimestrais."
   };
   // ns — Semeato RS->PR, ICMS 7% Conv.52/91
   if (tipo==="ns") return {
