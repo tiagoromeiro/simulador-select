@@ -89,7 +89,14 @@ select:focus,.inp:focus,.inp-txt:focus{border-color:var(--gn);background:#fff}
 .cc .cv{font-size:18px;font-weight:700;color:var(--gn);margin-bottom:3px}
 .cc .cs{font-size:11px;color:var(--g400)}
 /* tabela */
-.itbl{width:100%;border-collapse:collapse;font-size:13px}
+.itbl{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+.itbl th:nth-child(1),.itbl td:nth-child(1){width:12%}
+.itbl th:nth-child(2),.itbl td:nth-child(2){width:14%}
+.itbl th:nth-child(3),.itbl td:nth-child(3){width:16%}
+.itbl th:nth-child(4),.itbl td:nth-child(4){width:36%;font-size:11px;color:var(--g600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.itbl th:nth-child(5),.itbl td:nth-child(5){width:10%;text-align:center;color:var(--g600)}
+.itbl th:nth-child(6),.itbl td:nth-child(6){width:12%;text-align:right}
+.itbl th:last-child{text-align:right}
 .itbl th{text-align:left;font-size:10px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.05em;padding:7px 10px;border-bottom:1px solid var(--g200)}
 .itbl th:last-child{text-align:right}
 .itbl td{padding:9px 10px;border-bottom:1px solid var(--g100);vertical-align:middle}
@@ -151,16 +158,11 @@ footer{text-align:center;font-size:12px;color:var(--g400);padding:14px 24px;bord
     size:A4 portrait;
     margin:5mm;
   }
-  html{
-    width:210mm;
-  }
   body{
     margin:0!important;
     padding:0!important;
     background:#fff!important;
-    /* Reduzir tudo para caber em 1 pagina */
-    zoom:0.58;
-    width:100%;
+    overflow:hidden!important;
   }
   header{background:var(--gn)!important;border-bottom:3px solid var(--or)!important}
   .logo-img{height:40px!important}
@@ -168,20 +170,31 @@ footer{text-align:center;font-size:12px;color:var(--g400);padding:14px 24px;bord
   .pg{display:none!important}
   #ps{display:block!important}
   #pr{display:none!important}
-  main{padding:8px 16px!important;max-width:100%!important}
-  .card{margin-bottom:10px!important}
+  main{padding:6px 12px!important;max-width:100%!important}
+  .card{margin-bottom:8px!important;break-inside:avoid!important;page-break-inside:avoid!important}
+  .res{break-inside:avoid!important;margin-bottom:8px!important}
   .cg{grid-template-columns:1fr 1fr!important}
   .res-g{grid-template-columns:1fr 1fr 1fr!important}
   .g2,.g3{grid-template-columns:1fr 1fr!important}
   .itbl-wrap{overflow:visible!important}
-  .itbl{width:100%!important}
-  /* Forcar 1 pagina - nao permitir quebra */
-  html,body,#ps,main{
+  .itbl{width:100%!important;font-size:10px!important}
+  .itbl th,.itbl td{padding:3px 4px!important;font-size:10px!important}
+  .itbl th:nth-child(4),.itbl td:nth-child(4){font-size:9px!important}
+  .trtot td{font-size:11px!important;padding:5px 4px!important}
+  .tag{font-size:8px!important;padding:1px 3px!important}
+  .obs{display:none!important}
+  .cc .cs{display:none!important}
+  footer{border-top:1px solid #ddd!important;font-size:10px!important}
+  /* IMPEDIR SEGUNDA PAGINA */
+  html,body{
     page-break-after:avoid!important;
+    page-break-before:avoid!important;
+  }
+  #ps{
     page-break-inside:avoid!important;
-    break-after:avoid!important;
     break-inside:avoid!important;
   }
+  * {page-break-inside:avoid!important}
 }
 
 /* ===== MOBILE ===== */
@@ -361,7 +374,7 @@ footer{text-align:center;font-size:12px;color:var(--g400);padding:14px 24px;bord
     <div class="ct">Detalhamento de impostos</div>
     <div class="itbl-wrap">
     <table class="itbl">
-      <thead><tr><th>Tributo</th><th>Esfera</th><th>Periodicidade</th><th style="text-align:right">Valor</th></tr></thead>
+      <thead><tr><th>Tributo</th><th>Esfera</th><th>Periodicidade</th><th>Base</th><th>Alíq.</th><th style="text-align:right">Valor</th></tr></thead>
       <tbody id="imp-b"></tbody>
     </table>
     </div>
@@ -373,7 +386,7 @@ footer{text-align:center;font-size:12px;color:var(--g400);padding:14px 24px;bord
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
       Salvar no relatório
     </button>
-    <button class="btn" onclick="window.print()">
+    <button class="btn" onclick="imprimirUmaPagina()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       Imprimir / PDF
     </button>
@@ -396,7 +409,7 @@ footer{text-align:center;font-size:12px;color:var(--g400);padding:14px 24px;bord
   <div id="pw"></div>
   <div id="sc"></div>
   <div class="br" id="bra" style="display:none">
-    <button class="btn" onclick="window.print()">
+    <button class="btn" onclick="imprimirUmaPagina()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       Imprimir relatório
     </button>
@@ -709,13 +722,15 @@ function calc() {
     tb += "<td><strong>"+l.n+"</strong></td>";
     tb += "<td><span class='tag "+EC[l.e]+"'>"+EN[l.e]+"</span></td>";
     tb += "<td>"+(l.t?"<span class='tag t-tri'>Trimestral</span>":"<span class='tag t-men'>Mensal</span>")+"</td>";
+    tb += "<td class='col-base'>"+l.b+"</td>";
+    tb += "<td class='col-aliq'>"+l.a+"</td>";
     tb += "<td style='text-align:right'>"+R(l.v)+"</td>";
     tb += "</tr>";
   }
   if (credito>0) {
     tb += "<tr><td colspan='5' style='color:var(--gn);font-size:12px'>(-)  Credito ICMS entrada</td><td style='text-align:right;color:var(--gn);font-weight:500'>- "+R(credito)+"</td></tr>";
   }
-  tb += "<tr class='trtot'><td colspan='2'>Total de impostos a pagar</td><td></td><td style='text-align:right'>"+R(totI - (credito>0?Math.min(credito,totI):0))+"</td></tr>";
+  tb += "<tr class='trtot'><td colspan='5' style='text-align:right'>Total de impostos a pagar</td><td style='text-align:right'>"+R(totI - (credito>0?Math.min(credito,totI):0))+"</td></tr>";
   $ht("imp-b", tb);
   $tx("obs-t", res.obs);
 
@@ -912,6 +927,19 @@ if ("serviceWorker" in navigator) {
   window.addEventListener("load", function() {
     navigator.serviceWorker.register("sw.js").catch(function(){});
   });
+}
+
+function imprimirUmaPagina() {
+  var ps = document.getElementById("ps");
+  var alturaConteudo = ps.scrollHeight + document.querySelector("header").offsetHeight + document.querySelector("footer").offsetHeight + 40;
+  var alturaA4px = 1050; // ~A4 a 96dpi menos margens
+  var zoom = alturaConteudo > alturaA4px ? (alturaA4px / alturaConteudo) : 1;
+  var style = document.createElement("style");
+  style.id = "pz";
+  style.innerHTML = "@media print{body{zoom:" + zoom.toFixed(3) + "!important;-webkit-print-color-adjust:exact!important}}";
+  document.head.appendChild(style);
+  window.print();
+  setTimeout(function(){var s=document.getElementById("pz");if(s)s.parentNode.removeChild(s);},2000);
 }
 </script>
 </body>
