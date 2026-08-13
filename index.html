@@ -89,7 +89,14 @@ select:focus,.inp:focus,.inp-txt:focus{border-color:var(--gn);background:#fff}
 .cc .cv{font-size:18px;font-weight:700;color:var(--gn);margin-bottom:3px}
 .cc .cs{font-size:11px;color:var(--g400)}
 /* tabela */
-.itbl{width:100%;border-collapse:collapse;font-size:13px}
+.itbl{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+.itbl th:nth-child(1),.itbl td:nth-child(1){width:18%}
+.itbl th:nth-child(2),.itbl td:nth-child(2){width:14%}
+.itbl th:nth-child(3),.itbl td:nth-child(3){width:14%}
+.itbl th:nth-child(4),.itbl td:nth-child(4){width:28%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.itbl th:nth-child(5),.itbl td:nth-child(5){width:10%;text-align:center}
+.itbl th:nth-child(6),.itbl td:nth-child(6){width:16%;text-align:right}
+.trtot td:first-child{text-align:right}
 .itbl th{text-align:left;font-size:10px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.05em;padding:7px 10px;border-bottom:1px solid var(--g200)}
 .itbl th:last-child{text-align:right}
 .itbl td{padding:9px 10px;border-bottom:1px solid var(--g100);vertical-align:middle}
@@ -147,50 +154,32 @@ select:focus,.inp:focus,.inp-txt:focus{border-color:var(--gn);background:#fff}
 footer{text-align:center;font-size:12px;color:var(--g400);padding:14px 24px;border-top:1px solid var(--g200);background:#fff}
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;box-sizing:border-box!important}
-  @page{size:A4 portrait;margin:8mm}
-  html{font-size:9px!important}
-  body{margin:0!important;padding:0!important;background:#fff!important}
-  header{background:var(--gn)!important;border-bottom:2px solid var(--or)!important;padding:6px 12px!important}
-  .logo-img{height:24px!important}
-  .hi{grid-template-columns:1fr auto 1fr!important}
+  @page{size:A4 portrait;margin:0}
+  html,body{width:210mm;height:297mm;margin:0!important;padding:0!important;overflow:hidden!important;background:#fff!important}
+  /* Escalar todo o conteudo para caber em 1 pagina */
+  body{
+    transform:scale(0.62);
+    transform-origin:top left;
+    width:161mm; /* 210/0.62 = 338mm -> ajuste via scale */
+  }
+  /* Simular largura maior para o scale funcionar */
+  main{max-width:900px!important}
+  header{background:var(--gn)!important;border-bottom:3px solid var(--or)!important}
+  .logo-img{height:36px!important}
   .ntabs,.br,.bd,.fb,.tog-row,.row-credito{display:none!important}
   .pg{display:none!important}
   #ps{display:block!important}
   #pr{display:none!important}
-  main{padding:4px 6px!important;max-width:100%!important}
-  .card{border:1px solid #ccc!important;border-radius:4px!important;padding:6px 8px!important;margin-bottom:5px!important;break-inside:avoid!important;page-break-inside:avoid!important}
-  .ct{font-size:9px!important;margin-bottom:6px!important}
-  /* Resultado verde */
-  .res{padding:8px 10px!important;margin-bottom:5px!important;break-inside:avoid!important}
-  .res-tit{font-size:8px!important}
-  .res-val{font-size:16px!important;margin-bottom:8px!important}
-  .res-g{grid-template-columns:1fr 1fr 1fr!important;gap:4px!important;margin-bottom:6px!important}
-  .ri{padding:4px 6px!important}
-  .ri .rl{font-size:7px!important}
-  .ri .rv{font-size:9px!important}
-  .res-det{padding-top:6px!important}
-  .rr{font-size:9px!important;padding:2px 0!important}
-  .rrliq{font-size:10px!important;padding:5px 8px!important;margin-top:4px!important}
-  /* Cenarios */
-  .cg{grid-template-columns:1fr 1fr!important;gap:4px!important}
-  .cc{padding:5px 7px!important}
-  .cc .cn{font-size:8px!important}
-  .cc .cv{font-size:11px!important}
-  .cc .cs{font-size:7px!important}
-  /* Tabela impostos */
+  .card{margin-bottom:12px!important;break-inside:avoid!important}
+  .res{break-inside:avoid!important}
+  .cg{grid-template-columns:1fr 1fr!important}
+  .res-g{grid-template-columns:1fr 1fr 1fr!important}
+  .g2,.g3{grid-template-columns:1fr 1fr!important}
   .itbl-wrap{overflow:visible!important}
-  .itbl{width:100%!important;min-width:unset!important;font-size:8px!important}
-  .itbl th{font-size:7px!important;padding:3px 4px!important}
-  .itbl td{font-size:8px!important;padding:3px 4px!important}
-  .trtot td{font-size:9px!important;padding:4px!important}
-  .tag{font-size:7px!important;padding:1px 3px!important}
-  .obs{font-size:7px!important;padding:4px 6px!important;margin-top:4px!important}
-  /* Grid campos */
-  .g2,.g3{grid-template-columns:1fr 1fr!important;gap:4px!important}
-  footer{font-size:8px!important;padding:4px!important}
-  /* Tudo em 1 pagina */
-  #ps,main,.card,.res{page-break-inside:avoid!important;break-inside:avoid!important}
-  body,#ps{page-break-after:avoid!important;orphans:999!important;widows:999!important}
+  .itbl{min-width:unset!important;width:100%!important}
+  footer{border-top:1px solid #ddd!important}
+  /* Nao quebrar pagina */
+  #ps,body{page-break-after:avoid!important;page-break-inside:avoid!important}
 }
 
 /* ===== MOBILE ===== */
