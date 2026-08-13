@@ -317,8 +317,24 @@ footer{text-align:center;font-size:12px;color:var(--g400);padding:14px 24px;bord
         <div class="pfx"><span class="pre">%</span><input type="number" id="lucro" value="10" min="0" max="200" step="0.5" oninput="calc()"></div>
       </div>
       <div class="field" id="row-com-pct">
-        <span class="lbl">Valor da comissão (R$)</span>
-        <div class="pfx"><span class="pre">R$</span><input type="text" id="com-val" value="0" oninput="fmtI(this);calc()"></div>
+        <span class="lbl">Comissão do vendedor</span>
+        <div style="display:flex;gap:6px;align-items:center">
+          <!-- Toggle R$ / % -->
+          <div class="tog-row" style="flex-shrink:0">
+            <button class="tog a" id="com-tipo-rs" onclick="setComTipo('rs')">R$</button>
+            <button class="tog" id="com-tipo-pct" onclick="setComTipo('pct')">%</button>
+          </div>
+          <!-- Campo valor fixo R$ -->
+          <div class="pfx" id="com-campo-rs" style="flex:1">
+            <span class="pre">R$</span>
+            <input type="text" id="com-val" value="0" oninput="fmtI(this);calc()">
+          </div>
+          <!-- Campo percentual % -->
+          <div class="pfx" id="com-campo-pct" style="flex:1;display:none">
+            <span class="pre">%</span>
+            <input type="number" id="com-pct" value="0" min="0" max="50" step="0.1" oninput="calc()">
+          </div>
+        </div>
       </div>
       <div class="field">
         <span class="lbl">Descrição (opcional)</span>
@@ -405,6 +421,7 @@ footer{text-align:center;font-size:12px;color:var(--g400);padding:14px 24px;bord
 
 <script>
 var comBase = "bruto";
+var comTipo = "rs"; // "rs" = valor fixo R$, "pct" = percentual do preco
 var cur = null;
 var KEY = "sel_v6";
 var MESES = ["Janeiro","Fevereiro","Marco","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
@@ -452,6 +469,15 @@ function fmtI(el) {
 
 function parseI(id) {
   return parseFloat($el(id).value.replace(/\./g,"").replace(",",".")) || 0;
+}
+
+function setComTipo(t) {
+  comTipo = t;
+  $el("com-tipo-rs").className  = "tog" + (t === "rs"  ? " a" : "");
+  $el("com-tipo-pct").className = "tog" + (t === "pct" ? " a" : "");
+  $el("com-campo-rs").style.display  = t === "rs"  ? "" : "none";
+  $el("com-campo-pct").style.display = t === "pct" ? "" : "none";
+  calc();
 }
 
 function onTipo() {
@@ -585,9 +611,15 @@ function calc() {
   var custo   = parseI("custo");
   var frete   = parseI("frete");
   var custoTotal = custo + frete;
-  var lucPct  = parseFloat($el("lucro").value) || 0;
-  var comPct  = 0;
-  var comValFixo = parseI("com-val");
+  var lucPct     = parseFloat($el("lucro").value) || 0;
+  var comPct     = 0;
+  var comValFixo = 0;
+  if (comTipo === "rs") {
+    comValFixo = parseI("com-val");
+  } else {
+    comPct = parseFloat($el("com-pct").value) || 0;
+    // comValFixo sera calculado depois com base no preco
+  }
   var credito = 0;
   if (tipo==="ns" || tipo==="nv") {
     var cPct = parseFloat($el("credito-pct").value) || 0;
@@ -603,11 +635,23 @@ function calc() {
     impostoBruto = preco * tr;
     impostoLiq  = impostoBruto;
     // cv: comissao eh valor fixo informado; mn: sem comissao
+    if (comTipo === "pct") comValFixo = preco * comPct / 100;
     comissao    = comValFixo;
     lucroReal   = preco - impostoLiq - comissao;
     cargaEf     = preco>0 ? (impostoLiq/preco*100) : 0;
   } else {
-    preco        = calcPreco(custoTotal, lucPct, comValFixo, tr, credito);
+    if (comTipo === "pct" && comPct > 0) {
+      // comissao = preco * comPct/100
+      // preco - preco*tr - preco*comPct/100 - custo = lucroMin - credito (no numerador)
+      // preco*(1-tr-comPct/100) = custo + lucroMin - credito
+      var lucroMin2 = custoTotal * lucPct/100;
+      var cr2 = credito || 0;
+      var denom2 = 1 - tr - comPct/100;
+      preco = denom2 <= 0 ? 0 : (custoTotal + lucroMin2 - cr2) / denom2;
+      comValFixo = preco * comPct / 100;
+    } else {
+      preco = calcPreco(custoTotal, lucPct, comValFixo, tr, credito);
+    }
     impostoBruto = preco * tr;
     impostoLiq   = Math.max(0, impostoBruto - credito);
     comissao     = getComissao(preco, custoTotal, impostoLiq, comPct, credito);
@@ -654,7 +698,7 @@ function calc() {
       d += "<div class='rr'><span class='vd'>(+) Credito ICMS entrada</span><span class='vd'>" + R(credito) + "</span></div>";
     }
     d += "<div class='rr'><span class='rn'>(-) Impostos a pagar</span><span class='rn'>" + R(impostoLiq) + "</span></div>";
-    if (comValFixo>0) d += "<div class='rr'><span class='rn'>(-) Comissao vendedor</span><span class='rn'>" + R(comissao) + "</span></div>";
+    if (comissao>0) d += "<div class='rr'><span class='rn'>(-) Comissao vendedor</span><span class='rn'>" + R(comissao) + "</span></div>";
     d += "<div class='rr'><span class='rn'>(-) Custo total</span><span class='rn'>" + R(custoTotal) + "</span></div>";
     d += "<div class='rrliq'><span class='rp'>= Lucro liquido</span><span class='rp'>" + R(lucroReal) + "</span></div>";
   }
@@ -695,7 +739,12 @@ function calc() {
       var pp = calcPreco(custoTotal, lp, comValFixo, tr, credito);
       var ib = pp*tr;
       var il = Math.max(0, ib-credito);
-      var cc = comValFixo || 0;
+      var cc = 0;
+      if (comTipo === "pct" && comPct > 0) {
+        cc = pp * comPct / 100;
+      } else {
+        cc = comValFixo || 0;
+      }
       var ll = pp - custoTotal - il - cc;
       var isAtual = Math.abs(lp-lucPct)<0.01;
       if (pp>0) {
@@ -723,7 +772,7 @@ function selecionarCenario(lp) {
 }
 
 function limpar() {
-  $el("custo").value="0"; $el("frete").value="0"; $el("credito-pct").value="7"; $el("com-val").value="0";
+  $el("custo").value="0"; $el("frete").value="0"; $el("credito-pct").value="7"; $el("com-val").value="0"; $el("com-pct").value="0"; setComTipo("rs");
   $el("lucro").value="10"; $el("com").value="0"; $el("desc").value="";
   $el("tipo").value="up";
   setCom("bruto");
